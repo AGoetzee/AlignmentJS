@@ -124,8 +124,8 @@ function printResults(alignment, alignmentComplement, scoreMatrix) {
     console.log('***** Alignment Report *******');
     
     console.log('----Parameters----');
-    console.log(`Gap pentaly: ${GAP_PENALTY}`);
-    console.log(`Mismatch pentaly: ${MISMATCH_PENALTY}`);
+    console.log(`Gap penalty: ${GAP_PENALTY}`);
+    console.log(`Mismatch penalty: ${MISMATCH_PENALTY}`);
     console.log(`Match Score: ${MATCH_SCORE}`);
     
     console.log('------Input-------');
