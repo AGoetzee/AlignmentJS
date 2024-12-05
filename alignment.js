@@ -1,9 +1,16 @@
 // JavaScript implementation of global alignment
 // Arthur G. Goetzee 2024-11-27
 
-const GAP_PENALTY = -2
-const MISMATCH_PENALTY = -1
-const MATCH_SCORE = 2
+// Alignment parameters
+const GAP_PENALTY = -2;
+const MISMATCH_PENALTY = -1;
+const MATCH_SCORE = 2;
+
+// Input variables
+let seq1 = 'AGCT'; //rows or i
+let seq2 = 'AGCT'; //columns or j
+validateSequences(seq1, seq2);
+
 
 function constructMatrix(seq1, seq2) {
     let matrix = [];
@@ -17,17 +24,27 @@ function constructMatrix(seq1, seq2) {
     return matrix
 }
 
-function initializeMatrix(matrix, seq1, seq2) {
+function initializeScoreMatrix(matrix, seq1, seq2) {
     for (let i = 1; i<seq1.length; i++) {
         matrix[i][0] = matrix[i-1][0] + GAP_PENALTY;
-        tracebackMatrix[i][0] = 'U';
     }
     
     for (let j = 1; j < seq2.length; j++) {
         matrix[0][j] = matrix[0][j-1] + GAP_PENALTY;
-        tracebackMatrix[0][j] = 'L';
     }
-    tracebackMatrix[0][0] = 'D';
+    
+    return matrix
+}
+
+function initializeTracebackMatrix (matrix, seq1, seq2) {
+    for (let i = 1; i<seq1.length; i++) {
+        matrix[i][0] = 'U';
+    }
+    
+    for (let j = 1; j < seq2.length; j++) {
+        matrix[0][j] = 'L';
+    }
+    matrix[0][0] = 'D';
     
     return matrix
 }
@@ -56,6 +73,8 @@ function calculateScores(scoreMatrix, tracebackMatrix, seq1, seq2) {
 }
 
 function traceback(tracebackMatrix, seq1, seq2) {
+    let alignment = ''
+    let alignmentComplement = ''
 
     let i = seq1.length - 1;
     let j = seq2.length - 1;
@@ -82,7 +101,7 @@ function traceback(tracebackMatrix, seq1, seq2) {
 
 
     }
-    return alignment, alignmentComplement;
+    return {alignment, alignmentComplement};
 
 }
 
@@ -157,24 +176,19 @@ function validateSequences(seq1, seq2) {
     }
 }
 
-let seq1 = 'AGCT'; //rows or i
-let seq2 = 'AGCT'; //columns or j
-validateSequences(seq1, seq2);
-
-let alignment = ''; //seq1
-let alignmentComplement = ''; //seq2
-
 // step 1, initialization
 let scoreMatrix = constructMatrix(seq1, seq2);
 let tracebackMatrix = constructMatrix(seq1, seq2);
 
-scoreMatrix = initializeMatrix(scoreMatrix, seq1, seq2);
+scoreMatrix = initializeScoreMatrix(scoreMatrix, seq1, seq2);
+tracebackMatrix = initializeTracebackMatrix(tracebackMatrix, seq1, seq2)
+
 
 // step 2, calculation
-scoreMatrix, tracebackMatrix = calculateScores(scoreMatrix, tracebackMatrix, seq1, seq2);
+[scoreMatrix, tracebackMatrix] = calculateScores(scoreMatrix, tracebackMatrix, seq1, seq2);
 
 //step 3, traceback
-alignment, alignmentComplement = traceback(tracebackMatrix, seq1, seq2);
+const {alignment, alignmentComplement} = traceback(tracebackMatrix, seq1, seq2);
 
 //step 4, print the results!
 result = printResults(alignment, alignmentComplement, scoreMatrix);
