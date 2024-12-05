@@ -115,30 +115,35 @@ function prettyPrintAlignment(alignment, alignmentComplement) {
         matchAlignmentRow += `${alignedMatch(alignment[i],alignmentComplement[i])}  `;
         bottomAlignmentRow += `${alignmentComplement[i]}  `;
     }
-    console.log(topAlignmentRow);
-    console.log(matchAlignmentRow);
-    console.log(bottomAlignmentRow);
+
+    let result =`
+    ${topAlignmentRow}
+    ${matchAlignmentRow}
+    ${bottomAlignmentRow}`
+    
+    return result
 }
 
 function printResults(alignment, alignmentComplement, scoreMatrix) {
-    console.log('***** Alignment Report *******');
-    
-    console.log('----Parameters----');
-    console.log(`Gap penalty: ${GAP_PENALTY}`);
-    console.log(`Mismatch penalty: ${MISMATCH_PENALTY}`);
-    console.log(`Match Score: ${MATCH_SCORE}`);
-    
-    console.log('------Input-------');
-    console.log(`Sequence 1: ${seq1}`);
-    console.log(`Length: ${seq1.length}`);
+    let result = `
+    ***** Alignment Report *******
 
-    console.log(`\nSequence 2: ${seq2}`);
-    console.log(`Length: ${seq2.length}`);
+    ----Parameters----
+    Gap penalty: ${GAP_PENALTY}
+    Mismatch penalty: ${MISMATCH_PENALTY}
+    Match Score: ${MATCH_SCORE}
 
+    ------Input-------
+    Sequence 1: ${seq1}
+    Length: ${seq1.length}
+    Sequence 2: ${seq2}
+    Length: ${seq2.length}
+
+    ------Results------
+    Alignment score: ${scoreMatrix[seq1.length-1][seq2.length-1]}
+    ${prettyPrintAlignment(alignment,alignmentComplement)}`;
     
-    console.log('\n------Results------');
-    console.log(`Alignment score: ${scoreMatrix[seq1.length-1][seq2.length-1]}`);
-    prettyPrintAlignment(alignment,alignmentComplement);
+    return result
 
 }
 
@@ -172,4 +177,6 @@ scoreMatrix, tracebackMatrix = calculateScores(scoreMatrix, tracebackMatrix, seq
 alignment, alignmentComplement = traceback(tracebackMatrix, seq1, seq2);
 
 //step 4, print the results!
-printResults(alignment, alignmentComplement, scoreMatrix);
+result = printResults(alignment, alignmentComplement, scoreMatrix);
+
+console.log(result)
