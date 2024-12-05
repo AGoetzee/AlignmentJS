@@ -20,3 +20,13 @@ document.getElementById("run").addEventListener("click", function () {
 
     document.getElementById("results").textContent = results;
 });
+
+document.getElementById("copyButton").addEventListener("click", function() {
+    const copyText = document.getElementById("results").textContent
+    navigator.clipboard.writeText(copyText)
+    document.getElementById('copyAlert').textContent = "Copied!"
+    
+    setTimeout(function() {
+        document.getElementById('copyAlert').textContent = "";
+    }, 1000);
+});
