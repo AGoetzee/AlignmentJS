@@ -138,7 +138,7 @@ function prettyPrintAlignment(alignment, alignmentComplement) {
     return result;
 }
 
-function printResults(alignment, alignmentComplement, scoreMatrix) {
+function printResults(alignment, alignmentComplement, scoreMatrix, seq1, seq2) {
     const result = `
     ***** Alignment Report *******
 
@@ -189,7 +189,7 @@ export function runAlignment(seq1, seq2) {
     );
 
     //step 4, print the results!
-    return printResults(alignment, alignmentComplement, scoreMatrix);
+    return printResults(alignment, alignmentComplement, scoreMatrix, seq1, seq2);
 }
 
 // Input variables
