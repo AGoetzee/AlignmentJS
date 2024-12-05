@@ -6,12 +6,6 @@ const GAP_PENALTY = -2;
 const MISMATCH_PENALTY = -1;
 const MATCH_SCORE = 2;
 
-// Input variables
-let seq1 = 'AGCT'; //rows or i
-let seq2 = 'AGCT'; //columns or j
-validateSequences(seq1, seq2);
-
-
 function constructMatrix(seq1, seq2) {
     let matrix = [];
     for (let i = 0; i<seq1.length;i++) {
@@ -60,7 +54,7 @@ function isMatch(aa1, aa2) {
 function calculateScores(scoreMatrix, tracebackMatrix, seq1, seq2) {
     for (let i = 1; i<seq1.length; i++) {
         for (let j = 1; j<seq2.length; j++) {
-            choices = {
+            const choices = {
                 'U': scoreMatrix[i-1][j] + GAP_PENALTY,
                 'L': scoreMatrix[i][j-1] + GAP_PENALTY,
                 'D': scoreMatrix[i-1][j-1] + isMatch(seq1[i],seq2[j])
@@ -106,14 +100,14 @@ function traceback(tracebackMatrix, seq1, seq2) {
 }
 
 function prettyPrintMatrix(matrix, seq1, seq2) {
-    header = ' ';
-    for (char of seq2) {
+    const header = ' ';
+    for (let char of seq2) {
         header += `   ${char}`;
     }
     console.log(header)
 
     for (let i = 0; i < seq1.length; i++){
-        row = `${seq1[i]}  `;
+        let row = `${seq1[i]}  `;
         for (let j = 0 ;j < seq2.length; j++) {
             row += `${matrix[i][j]}`.padEnd(4, ' ');
         }
@@ -144,7 +138,7 @@ function prettyPrintAlignment(alignment, alignmentComplement) {
 }
 
 function printResults(alignment, alignmentComplement, scoreMatrix) {
-    let result = `
+    const result = `
     ***** Alignment Report *******
 
     ----Parameters----
@@ -176,21 +170,29 @@ function validateSequences(seq1, seq2) {
     }
 }
 
-// step 1, initialization
-let scoreMatrix = constructMatrix(seq1, seq2);
-let tracebackMatrix = constructMatrix(seq1, seq2);
+export function runAlignment(seq1, seq2) {
 
-scoreMatrix = initializeScoreMatrix(scoreMatrix, seq1, seq2);
-tracebackMatrix = initializeTracebackMatrix(tracebackMatrix, seq1, seq2)
+    // step 1, initialization
+    let scoreMatrix = constructMatrix(seq1, seq2);
+    let tracebackMatrix = constructMatrix(seq1, seq2);
 
+    scoreMatrix = initializeScoreMatrix(scoreMatrix, seq1, seq2);
+    tracebackMatrix = initializeTracebackMatrix(tracebackMatrix, seq1, seq2)
+    // step 2, calculation
+    [scoreMatrix, tracebackMatrix] = calculateScores(scoreMatrix, tracebackMatrix, seq1, seq2);
 
-// step 2, calculation
-[scoreMatrix, tracebackMatrix] = calculateScores(scoreMatrix, tracebackMatrix, seq1, seq2);
+    //step 3, traceback
+    const { alignment, alignmentComplement } = traceback(tracebackMatrix, seq1, seq2);
 
-//step 3, traceback
-const {alignment, alignmentComplement} = traceback(tracebackMatrix, seq1, seq2);
+    //step 4, print the results!
+    return printResults(alignment, alignmentComplement, scoreMatrix);
 
-//step 4, print the results!
-result = printResults(alignment, alignmentComplement, scoreMatrix);
+    
+}
 
-console.log(result)
+// Input variables
+let seq1 = 'AGCT'; //rows or i
+let seq2 = 'AGCT'; //columns or j
+validateSequences(seq1, seq2);
+
+console.log(runAlignment(seq1, seq2));
