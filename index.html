@@ -10,21 +10,22 @@
                 <h1>AlignmentJS</h1>
             </header>
 
-            <form id="inputs">
-                <!--TODO: Here goes the input boxes for sequences and params-->
+            <section id="inputs">
                 <header><h2>Inputs and parameters</h2></header>
 
                 <p id="sequences">
                     <label for="seq1">Sequence 1</label>
-                    <input type="text" id="seq1" />
+                    <input type="text" id="seq1" value="AGCT">
 
                     <br />
 
                     <label for="seq2">Sequence 2</label>
-                    <input type="text" id="seq2" />
+                    <input type="text" id="seq2" value="AGCT">
                 </p>
 
                 <p id="parameters">
+                    <strong>Note, these parameters dont work yet.</strong>
+                    <br />
                     <label for="gapPenalty">Gap Penalty</label>
                     <input type="number" id="gapPenalty" value="-2" />
 
@@ -35,17 +36,17 @@
                     <input type="number" id="matchScore" value="2" />
                 </p>
 
-                <button type="submit">Run alignment</button>
+                <button id="run">Run alignment</button>
             </form>
 
             <section id="output">
-                <!-- TODO: Here goes the output -->
                 <header><h2>Outputs</h2></header>
 
-                <textarea id="results">
+                <pre id="results">
                     Results will be displayed here
-                </textarea>
+                </pre>
             </section>
         </main>
+        <script type="module" src="script.js"></script>
     </body>
 </html>
