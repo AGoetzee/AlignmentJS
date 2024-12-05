@@ -189,7 +189,13 @@ export function runAlignment(seq1, seq2) {
     );
 
     //step 4, print the results!
-    return printResults(alignment, alignmentComplement, scoreMatrix, seq1, seq2);
+    return printResults(
+        alignment,
+        alignmentComplement,
+        scoreMatrix,
+        seq1,
+        seq2
+    );
 }
 
 // Input variables

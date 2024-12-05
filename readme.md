@@ -4,7 +4,7 @@ This is a javascript implementation of the [Needleman-Wunsch algorithm](https://
 
 ## Web version
 
-A live web version of the script can be found [here](). _Note that not all functionality is implemented yet._
+A live web version of the script can be found [here](https://agoetzee.github.io/AlignmentJS/). _Note that not all functionality is implemented yet._ This web version is still a work in progress, and I will be adding more features in the future. Feedback is welcome in the issues section. Go easy on me, this is my first web project.
 
 ## Offline usage
 
