@@ -29,3 +29,21 @@ let parse = function (f) {
         });
     return subMat
 }
+
+let getSubMat = function(option='BLOSUM62') {
+    if (option === 'BLOSUM62') {
+        return loadBLOSUM62()
+    } else if (option === 'PAM250') {
+        return loadPAM250()
+    } else {
+        console.error('Invalid substitution matrix selected')
+    }
+}
+
+let loadBLOSUM62 = function () {
+    return parse('BLOSUM62.txt');
+};
+
+let loadPAM250 = function () {
+    return parse('PAM250.txt');
+};
