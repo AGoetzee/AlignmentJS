@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 
 
-let parse = function (f) {
+function parse(f) {
 
     let subMat = {};
 
@@ -30,7 +30,7 @@ let parse = function (f) {
     return subMat
 }
 
-let getSubMat = function(option='BLOSUM62') {
+function getSubMat(option='BLOSUM62') {
     if (option === 'BLOSUM62') {
         return loadBLOSUM62()
     } else if (option === 'PAM250') {
@@ -40,10 +40,10 @@ let getSubMat = function(option='BLOSUM62') {
     }
 }
 
-let loadBLOSUM62 = function () {
+function loadBLOSUM62() {
     return parse('BLOSUM62.txt');
-};
+}
 
-let loadPAM250 = function () {
+function loadPAM250() {
     return parse('PAM250.txt');
-};
+}
