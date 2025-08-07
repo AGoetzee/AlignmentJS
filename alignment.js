@@ -163,12 +163,24 @@ function printResults(alignment, alignmentComplement, scoreMatrix, seq1, seq2) {
 }
 
 function validateSequences(seq1, seq2) {
+    const AMINO_ACIDS = ['A','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','Y']
+
     if (seq1.length === 0 || seq2.length === 0) {
         throw new Error("Sequences cannot be empty!");
     }
 
     if (typeof seq1 != "string" || typeof seq2 != "string") {
         throw new Error("Sequences must be strings!");
+    }
+
+    for (let symbol of seq1) {
+        if (!AMINO_ACIDS.includes(symbol)) {
+            throw new Error("Sequences must only contain amino acids")}
+    }
+
+    for (let symbol of seq2) {
+        if (!AMINO_ACIDS.includes(symbol)) {
+        throw new Error("Sequences must only contain amino acids")}
     }
 }
 
