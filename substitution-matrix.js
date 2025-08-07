@@ -30,7 +30,7 @@ function parse(f) {
     return subMat
 }
 
-function getSubMat(option='BLOSUM62') {
+export function getSubMat(option='BLOSUM62') {
     if (option === 'BLOSUM62') {
         return loadBLOSUM62()
     } else if (option === 'PAM250') {

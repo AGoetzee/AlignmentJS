@@ -1,6 +1,8 @@
 // JavaScript implementation of global alignment
 // Arthur G. Goetzee 2024-11-27
 
+import {getSubMat} from './substitution-matrix.js'
+
 // Alignment parameters
 const GAP_PENALTY = -2;
 const MISMATCH_PENALTY = -1;
@@ -51,13 +53,13 @@ function isMatch(aa1, aa2) {
     }
 }
 
-function calculateScores(scoreMatrix, tracebackMatrix, seq1, seq2) {
+function calculateScores(scoreMatrix, tracebackMatrix, substitutionMatrix, seq1, seq2) {
     for (let i = 1; i < seq1.length; i++) {
         for (let j = 1; j < seq2.length; j++) {
             const choices = {
                 U: scoreMatrix[i - 1][j] + GAP_PENALTY,
                 L: scoreMatrix[i][j - 1] + GAP_PENALTY,
-                D: scoreMatrix[i - 1][j - 1] + isMatch(seq1[i], seq2[j]),
+                D: scoreMatrix[i - 1][j - 1] + substitutionMatrix[seq1[i]][seq2[j]],
             };
             scoreMatrix[i][j] = Math.max(...Object.values(choices));
             tracebackMatrix[i][j] = Object.entries(choices).reduce(
@@ -174,12 +176,13 @@ export function runAlignment(seq1, seq2) {
     // step 1, initialization
     let scoreMatrix = constructMatrix(seq1, seq2);
     let tracebackMatrix = constructMatrix(seq1, seq2);
+    let substitutionMatrix = getSubMat('BLOSUM62')
 
     scoreMatrix = initializeScoreMatrix(scoreMatrix, seq1, seq2);
     tracebackMatrix = initializeTracebackMatrix(tracebackMatrix, seq1, seq2)[
         // step 2, calculation
         (scoreMatrix, tracebackMatrix)
-    ] = calculateScores(scoreMatrix, tracebackMatrix, seq1, seq2);
+    ] = calculateScores(scoreMatrix, tracebackMatrix, substitutionMatrix, seq1, seq2);
 
     //step 3, traceback
     const { alignment, alignmentComplement } = traceback(
