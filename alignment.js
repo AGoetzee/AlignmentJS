@@ -10,9 +10,9 @@ const MATCH_SCORE = 2;
 
 function constructMatrix(seq1, seq2) {
     let matrix = [];
-    for (let i = 0; i < seq1.length; i++) {
+    for (let i = 0; i < seq1.length + 1; i++) {
         matrix.push([]); // row
-        for (let j = 0; j < seq2.length; j++) {
+        for (let j = 0; j < seq2.length + 1; j++) {
             matrix[i].push(0); // columns
         }
     }
@@ -21,11 +21,11 @@ function constructMatrix(seq1, seq2) {
 }
 
 function initializeScoreMatrix(matrix, seq1, seq2) {
-    for (let i = 1; i < seq1.length; i++) {
+    for (let i = 1; i < seq1.length + 1; i++) {
         matrix[i][0] = matrix[i - 1][0] + GAP_PENALTY;
     }
 
-    for (let j = 1; j < seq2.length; j++) {
+    for (let j = 1; j < seq2.length + 1; j++) {
         matrix[0][j] = matrix[0][j - 1] + GAP_PENALTY;
     }
 
@@ -54,12 +54,12 @@ function isMatch(aa1, aa2) {
 }
 
 function calculateScores(scoreMatrix, tracebackMatrix, substitutionMatrix, seq1, seq2) {
-    for (let i = 1; i < seq1.length; i++) {
-        for (let j = 1; j < seq2.length; j++) {
+    for (let i = 1; i < seq1.length + 1; i++) {
+        for (let j = 1; j < seq2.length + 1; j++) {
             const choices = {
                 U: scoreMatrix[i - 1][j] + GAP_PENALTY,
                 L: scoreMatrix[i][j - 1] + GAP_PENALTY,
-                D: scoreMatrix[i - 1][j - 1] + substitutionMatrix[seq1[i]][seq2[j]],
+                D: scoreMatrix[i - 1][j - 1] + substitutionMatrix[seq1[i-1]][seq2[j-1]],
             };
             scoreMatrix[i][j] = Math.max(...Object.values(choices));
             tracebackMatrix[i][j] = Object.entries(choices).reduce(
@@ -156,7 +156,7 @@ function printResults(alignment, alignmentComplement, scoreMatrix, seq1, seq2) {
     Length: ${seq2.length}
 
     ------Results------
-    Alignment score: ${scoreMatrix[seq1.length - 1][seq2.length - 1]}
+    Alignment score: ${scoreMatrix[seq1.length][seq2.length]}
     ${prettyPrintAlignment(alignment, alignmentComplement)}`;
 
     return result;
@@ -202,8 +202,8 @@ export function runAlignment(seq1, seq2) {
 }
 
 // Input variables
-let seq1 = "AGCT"; //rows or i
-let seq2 = "AGCT"; //columns or j
+let seq1 = "MALWMRLLPLLALLALWGPDPAAAFVNQHLCGSHLVEALYLVCGERGFFYTPKTRREAEDLQVGQVELGGGPGAGSLQPLALEGSLQKRGIVEQCCTSICSLYQLENYCN"; //rows or i
+let seq2 = "MALWMRLLPLLALLALWGPDPAAAFVNQHLCGSHLVEALYLVCGERGFFYTPKTRREAEDLQVGQVELGGGPGAGSLQPLALEGSLQKRGIVEQCCTSICSLYQLENYCN"; //columns or j
 validateSequences(seq1, seq2);
 
 console.log(runAlignment(seq1, seq2));
