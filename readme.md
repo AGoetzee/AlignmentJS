@@ -1,3 +1,6 @@
+# ❗This is a work-in-progress PR ❗
+Hi! Not sure how you got here, but good that you're here! In this branch I am working on adding substitution matrix functionality. This branch has broken some functionality, such as **offline usage** and **aligning of DNA sequences**. Other than that, substitution matrices _should mostly work now_. Although you can't select it or really see that its there.
+
 # AlignmentJS
 
 This is a javascript implementation of the [Needleman-Wunsch algorithm](https://en.wikipedia.org/wiki/Needleman–Wunsch_algorithm) for global sequence alignment. It is a simple implementation that I made to get a better understanding of javascript and web development, as such you may encounter some beginner mistakes. The code is not optimized for performance, but it should work fine for small sequences. Feel free to give feedback or suggestions for improvements in the issues section.
