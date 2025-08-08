@@ -1,4 +1,4 @@
-import fs from 'node:fs'
+
 async function fetchSubMat(option='BLOSUM62') {
     const url = `https://www.ncbi.nlm.nih.gov/IEB/ToolBox/C_DOC/lxr/source/data/${option}`
     const parser = new DOMParser()
@@ -14,8 +14,7 @@ function parse(f) {
 
     let subMat = {};
 
-    // Load file and clean a bit
-    let text = fs.readFileSync(f, 'utf-8').toString();
+    // Clean a bit
     text = text.replace(/\r/g, '').split('\n');
 
     // In this structure, AA's for the target subs are always on the second line
