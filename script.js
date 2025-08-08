@@ -1,6 +1,6 @@
 import { runAlignment } from "./alignment.js";
 
-document.getElementById("run").addEventListener("click", function () {
+document.getElementById("run").addEventListener("click", async function () {
     const seq1 = document.getElementById("seq1").value.toUpperCase();
     const seq2 = document.getElementById("seq2").value.toUpperCase();
 
@@ -16,7 +16,7 @@ document.getElementById("run").addEventListener("click", function () {
         return;
     }
 
-    const results = runAlignment(seq1, seq2);
+    const results = await runAlignment(seq1, seq2);
 
     document.getElementById("results").textContent = results;
 });

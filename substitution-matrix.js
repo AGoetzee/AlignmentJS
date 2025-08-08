@@ -7,10 +7,10 @@ async function fetchSubMat(option='BLOSUM62') {
     let raw_html = await response.text()
     let doc = parser.parseFromString(raw_html, 'text/html')
 
-function parse(f) {
     return doc.querySelector('.filecontent-src').innerHTML
 }
 
+async function parse(text) {
 
     let subMat = {};
 
@@ -48,10 +48,12 @@ export function getSubMat(option='BLOSUM62') {
     }
 }
 
-function loadBLOSUM62() {
-    return parse('BLOSUM62.txt');
+async function loadBLOSUM62() {
+    let subMat = await fetchSubMat('BLOSUM62')
+    return parse(subMat);
 }
 
-function loadPAM250() {
-    return parse('PAM250.txt');
+async function loadPAM250() {
+    let subMat = await fetchSubMat('PAM250')
+    return parse(subMat);
 }

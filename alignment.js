@@ -184,11 +184,11 @@ function validateSequences(seq1, seq2) {
     }
 }
 
-export function runAlignment(seq1, seq2) {
+export async function runAlignment(seq1, seq2) {
     // step 1, initialization
     let scoreMatrix = constructMatrix(seq1, seq2);
     let tracebackMatrix = constructMatrix(seq1, seq2);
-    let substitutionMatrix = getSubMat('BLOSUM62')
+    let substitutionMatrix = await getSubMat('BLOSUM62')
 
     scoreMatrix = initializeScoreMatrix(scoreMatrix, seq1, seq2);
     tracebackMatrix = initializeTracebackMatrix(tracebackMatrix, seq1, seq2)[
