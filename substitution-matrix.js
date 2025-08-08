@@ -1,7 +1,16 @@
 import fs from 'node:fs'
+async function fetchSubMat(option='BLOSUM62') {
+    const url = `https://www.ncbi.nlm.nih.gov/IEB/ToolBox/C_DOC/lxr/source/data/${option}`
+    const parser = new DOMParser()
 
+    let response = await fetch(url)
+    let raw_html = await response.text()
+    let doc = parser.parseFromString(raw_html, 'text/html')
 
 function parse(f) {
+    return doc.querySelector('.filecontent-src').innerHTML
+}
+
 
     let subMat = {};
 
