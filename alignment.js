@@ -144,11 +144,6 @@ function printResults(alignment, alignmentComplement, scoreMatrix, seq1, seq2) {
     const result = `
     ***** Alignment Report *******
 
-    ----Parameters----
-    Gap penalty: ${GAP_PENALTY}
-    Mismatch penalty: ${MISMATCH_PENALTY}
-    Match Score: ${MATCH_SCORE}
-
     ------Input-------
     Sequence 1: ${seq1}
     Length: ${seq1.length}
