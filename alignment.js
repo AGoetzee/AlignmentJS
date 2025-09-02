@@ -1,6 +1,8 @@
 // JavaScript implementation of global alignment
 // Arthur G. Goetzee 2024-11-27
 
+import {getSubMat} from './substitution-matrix.js'
+
 // Alignment parameters
 const GAP_PENALTY = -2;
 const MISMATCH_PENALTY = -1;
@@ -8,9 +10,9 @@ const MATCH_SCORE = 2;
 
 function constructMatrix(seq1, seq2) {
     let matrix = [];
-    for (let i = 0; i < seq1.length; i++) {
+    for (let i = 0; i < seq1.length + 1; i++) {
         matrix.push([]); // row
-        for (let j = 0; j < seq2.length; j++) {
+        for (let j = 0; j < seq2.length + 1; j++) {
             matrix[i].push(0); // columns
         }
     }
@@ -19,11 +21,11 @@ function constructMatrix(seq1, seq2) {
 }
 
 function initializeScoreMatrix(matrix, seq1, seq2) {
-    for (let i = 1; i < seq1.length; i++) {
+    for (let i = 1; i < seq1.length + 1; i++) {
         matrix[i][0] = matrix[i - 1][0] + GAP_PENALTY;
     }
 
-    for (let j = 1; j < seq2.length; j++) {
+    for (let j = 1; j < seq2.length + 1; j++) {
         matrix[0][j] = matrix[0][j - 1] + GAP_PENALTY;
     }
 
@@ -51,13 +53,13 @@ function isMatch(aa1, aa2) {
     }
 }
 
-function calculateScores(scoreMatrix, tracebackMatrix, seq1, seq2) {
-    for (let i = 1; i < seq1.length; i++) {
-        for (let j = 1; j < seq2.length; j++) {
+function calculateScores(scoreMatrix, tracebackMatrix, substitutionMatrix, seq1, seq2) {
+    for (let i = 1; i < seq1.length + 1; i++) {
+        for (let j = 1; j < seq2.length + 1; j++) {
             const choices = {
                 U: scoreMatrix[i - 1][j] + GAP_PENALTY,
                 L: scoreMatrix[i][j - 1] + GAP_PENALTY,
-                D: scoreMatrix[i - 1][j - 1] + isMatch(seq1[i], seq2[j]),
+                D: scoreMatrix[i - 1][j - 1] + substitutionMatrix[seq1[i-1]][seq2[j-1]],
             };
             scoreMatrix[i][j] = Math.max(...Object.values(choices));
             tracebackMatrix[i][j] = Object.entries(choices).reduce(
@@ -142,11 +144,6 @@ function printResults(alignment, alignmentComplement, scoreMatrix, seq1, seq2) {
     const result = `
     ***** Alignment Report *******
 
-    ----Parameters----
-    Gap penalty: ${GAP_PENALTY}
-    Mismatch penalty: ${MISMATCH_PENALTY}
-    Match Score: ${MATCH_SCORE}
-
     ------Input-------
     Sequence 1: ${seq1}
     Length: ${seq1.length}
@@ -154,13 +151,15 @@ function printResults(alignment, alignmentComplement, scoreMatrix, seq1, seq2) {
     Length: ${seq2.length}
 
     ------Results------
-    Alignment score: ${scoreMatrix[seq1.length - 1][seq2.length - 1]}
+    Alignment score: ${scoreMatrix[seq1.length][seq2.length]}
     ${prettyPrintAlignment(alignment, alignmentComplement)}`;
 
     return result;
 }
 
 function validateSequences(seq1, seq2) {
+    const AMINO_ACIDS = ['A','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','Y']
+
     if (seq1.length === 0 || seq2.length === 0) {
         throw new Error("Sequences cannot be empty!");
     }
@@ -168,18 +167,29 @@ function validateSequences(seq1, seq2) {
     if (typeof seq1 != "string" || typeof seq2 != "string") {
         throw new Error("Sequences must be strings!");
     }
+
+    for (let symbol of seq1) {
+        if (!AMINO_ACIDS.includes(symbol)) {
+            throw new Error("Sequences must only contain amino acids")}
+    }
+
+    for (let symbol of seq2) {
+        if (!AMINO_ACIDS.includes(symbol)) {
+        throw new Error("Sequences must only contain amino acids")}
+    }
 }
 
-export function runAlignment(seq1, seq2) {
+export async function runAlignment(seq1, seq2) {
     // step 1, initialization
     let scoreMatrix = constructMatrix(seq1, seq2);
     let tracebackMatrix = constructMatrix(seq1, seq2);
+    let substitutionMatrix = await getSubMat('BLOSUM62')
 
     scoreMatrix = initializeScoreMatrix(scoreMatrix, seq1, seq2);
     tracebackMatrix = initializeTracebackMatrix(tracebackMatrix, seq1, seq2)[
         // step 2, calculation
         (scoreMatrix, tracebackMatrix)
-    ] = calculateScores(scoreMatrix, tracebackMatrix, seq1, seq2);
+    ] = calculateScores(scoreMatrix, tracebackMatrix, substitutionMatrix, seq1, seq2);
 
     //step 3, traceback
     const { alignment, alignmentComplement } = traceback(
@@ -199,8 +209,8 @@ export function runAlignment(seq1, seq2) {
 }
 
 // Input variables
-let seq1 = "AGCT"; //rows or i
-let seq2 = "AGCT"; //columns or j
+let seq1 = "MALWMRLLPLLALLALWGPDPAAAFVNQHLCGSHLVEALYLVCGERGFFYTPKTRREAEDLQVGQVELGGGPGAGSLQPLALEGSLQKRGIVEQCCTSICSLYQLENYCN"; //rows or i
+let seq2 = "MALWMRLLPLLALLALWGPDPAAAFVNQHLCGSHLVEALYLVCGERGFFYTPKTRREAEDLQVGQVELGGGPGAGSLQPLALEGSLQKRGIVEQCCTSICSLYQLENYCN"; //columns or j
 validateSequences(seq1, seq2);
 
 console.log(runAlignment(seq1, seq2));
